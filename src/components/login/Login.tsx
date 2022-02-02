@@ -1,8 +1,8 @@
 import { Button } from "@mui/material";
 import React from "react"
-import Config from "../Config";
-import { UserData } from "../service/TwitchClientTypes";
-import LoginUtil from "../util/login/LoginUtil";
+import Config from "../../Config";
+import { UserData } from "../../service/TwitchClientTypes";
+import LoginUtil from "../../util/login/LoginUtil";
 
 export interface LoginProps {
     userData?: UserData
