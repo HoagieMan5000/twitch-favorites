@@ -1,41 +1,41 @@
 import * as React from "react";
 import "./App.css";
-import Switch from "@mui/material/Switch";
 import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import { useEffect, useState } from "react";
-import ChromeStorage from "./util/chrome/ChromeStorage";
 import Grid from "@mui/material/Grid";
 import Config from "./Config";
+import { Button } from "@mui/material"
+import LoginUtil from "./util/login/LoginUtil";
+import { UserData } from "./service/TwitchClientTypes";
+import TwitchClient from "./service/TwitchClient";
+import { Login } from "./components/Login";
 
 const App = () => {
-  const [chatEval, setChatEval] = useState(true);
+  const [userData, setUserData] = useState<UserData | undefined>(undefined);
+
+  async function getUser() {
+    const loginData = await LoginUtil.getLogin();
+    if (loginData?.accessToken) {
+      const client = new TwitchClient(loginData.accessToken);
+      const user = await client.getCurrentUser();
+      setUserData(user);
+    }
+  }
 
   useEffect(() => {
-    const chromeStorage = new ChromeStorage();
-    async function get() {
-      const val = await chromeStorage.getSync([Config.useChatEval]);
-      setChatEval(val[Config.useChatEval] ?? true);
-    }
-    get();
+    getUser();
   }, []);
-
-  useEffect(() => {
-    async function set() {
-      const chromeStorage = new ChromeStorage();
-      await chromeStorage.setSync({
-        [Config.useChatEval]: chatEval
-      });
-    }
-    set();
-  }, [chatEval]);
 
   return (
     <div className="App">
       <Grid container>
         <Grid item xs={12}>
           <FormGroup>
-            <FormControlLabel control={<Switch checked={chatEval} onChange={() => setChatEval(!chatEval)} />} label="Chat Evaluation" />
+            <Login
+              userData={userData}
+              onLogin={() => getUser()}
+            />
+            <div>There is nothing here yet 🤓</div>
           </FormGroup>
         </Grid>
       </Grid>
