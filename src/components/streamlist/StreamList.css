@@ -1,0 +1,9 @@
+.streamer-avatar-container {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.streamer-avatar {
+    height: 50px;
+    border-radius: 50px;
+}

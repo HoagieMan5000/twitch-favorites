@@ -1,0 +1,4 @@
+TODO
+
+* Set streamers as favorite from currently streaming and following
+* 

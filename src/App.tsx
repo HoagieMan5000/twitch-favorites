@@ -5,14 +5,23 @@ import { useEffect } from "react";
 import Grid from "@mui/material/Grid";
 import { Login } from "./components/login/Login";
 import { useUserData } from "./hooks/UserData";
+import { useFollowingList } from "./hooks/FollowingList";
+import { TwitchFollowedStreamList } from "./components/followerlist/TwitchFollowedStreamList";
+import { useStreams } from "./hooks/Streams";
+import { TwitchStreamList } from "./components/streamlist/TwitchStreamList";
+import { Divider } from "@mui/material";
 
 const App = () => {
 
   const [userData, getUser] = useUserData();
+  const [followerList, getFollowing] = useFollowingList(userData);
+  const [streams, getStreams] = useStreams(followerList);
 
   useEffect(() => {
     getUser();
   }, []);
+
+  console.log({ streams });
 
   return (
     <div className="App">
@@ -23,8 +32,14 @@ const App = () => {
               userData={userData}
               onLogin={() => getUser()}
             />
-            <div>There is nothing here yet 🤓</div>
           </FormGroup>
+          <TwitchStreamList
+            streams={streams ?? []}
+          />
+          <Divider />
+          <TwitchFollowedStreamList
+            following={followerList ?? []}
+          />
         </Grid>
       </Grid>
     </div>
