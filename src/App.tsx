@@ -10,6 +10,7 @@ import { TwitchFollowedStreamList } from "./components/followerlist/TwitchFollow
 import { useStreams } from "./hooks/Streams";
 import { TwitchStreamList } from "./components/streamlist/TwitchStreamList";
 import { Divider } from "@mui/material";
+import { FavoritesListContainer } from "./components/favoriteslist/FavoritesListContainer";
 
 const App = () => {
 
@@ -33,12 +34,9 @@ const App = () => {
               onLogin={() => getUser()}
             />
           </FormGroup>
-          <TwitchStreamList
-            streams={streams ?? []}
-          />
-          <Divider />
-          <TwitchFollowedStreamList
+          <FavoritesListContainer
             following={followerList ?? []}
+            streams={streams ?? []}
           />
         </Grid>
       </Grid>
