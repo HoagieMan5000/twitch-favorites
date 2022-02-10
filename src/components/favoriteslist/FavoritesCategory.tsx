@@ -1,6 +1,6 @@
 import { Autocomplete, Button, Divider, TextField } from "@mui/material";
 import React, { useState } from "react";
-import { StreamData, UserFollows } from "../../service/TwitchClientTypes";
+import { StreamData, UserData, UserFollows } from "../../service/TwitchClientTypes";
 import { FlexCol, FlexRow } from "../../util/FlexBox";
 import { TwitchStream } from "../streamlist/TwitchStream";
 import { FavoriteCategory, FavoritesData, StreamFavoritesData } from "./FavoritesTypes";
@@ -9,7 +9,7 @@ export interface FavoritesCategoryProps {
     favorites: FavoritesData
     category: FavoriteCategory
     streams: StreamData[]
-    following: UserFollows[]
+    following: UserData[]
 
     onFavoritesChange: (value: FavoritesData) => void
 }
@@ -22,12 +22,12 @@ export const FavoritesCategory = (props: FavoritesCategoryProps) => {
     const favoritesInCategory = favorites.favorites.filter(favorite => favorite.categoryIds.includes(category.id));
     const liveStreamsInCategory = streams.filter(stream => !!favoritesInCategory.find(fav => fav.channelId === stream.user_id));
 
-    function onAddStreamer(streamer: UserFollows) {
-        let existingFavorite = favorites.favorites.find(fav => fav.channelId === streamer.to_id);
+    function onAddStreamer(streamer: UserData) {
+        let existingFavorite = favorites.favorites.find(fav => fav.channelId === streamer.id);
         if (!existingFavorite) {
             existingFavorite = {
-                channelId: streamer.to_id,
-                channelName: streamer.to_name,
+                channelId: streamer.id,
+                channelName: streamer.display_name,
                 categoryIds: [category.id]
             } as StreamFavoritesData;
             favorites.favorites.push(existingFavorite);
@@ -37,7 +37,7 @@ export const FavoritesCategory = (props: FavoritesCategoryProps) => {
                 existingFavorite?.categoryIds.push(category.id);
                 props.onFavoritesChange({ ...favorites })
             } else {
-                console.log(`Channel ${streamer.to_id} is already is the ${category.label} category`)
+                console.log(`Channel ${streamer.id} is already is the ${category.label} category`)
             }
         }
     }
@@ -50,13 +50,14 @@ export const FavoritesCategory = (props: FavoritesCategoryProps) => {
                     disablePortal
                     id="followed-streamers-selector"
                     size="small"
-                    options={following.map(f => f.to_name)}
+                    options={following.map(f => f.login)}
                     sx={{ width: 260 }}
                     renderInput={(params) => <TextField {...params} label="Add Streamer" />}
                     onChange={(event: any, newValue: string | null) => setSelectedStreamer(newValue)}
                 />
                 <Button onClick={() => {
-                    const streamer = following.find(f => f.to_name === selectedStreamer);
+                    const streamer = following.find(f => f.login === selectedStreamer);
+                    console.log({ streamer, following })
                     if (streamer) {
                         onAddStreamer(streamer)
                     }
@@ -67,6 +68,7 @@ export const FavoritesCategory = (props: FavoritesCategoryProps) => {
         <FlexCol>
             {liveStreamsInCategory.map(liveStream => (
                 <TwitchStream
+                    userData={following.find(f => f.id === liveStream.user_id)}
                     stream={liveStream}
                 />
             ))}

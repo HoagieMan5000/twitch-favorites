@@ -1,4 +1,6 @@
 TODO
 
-* Set streamers as favorite from currently streaming and following
-* 
+* Make it sexy
+* Remove streamers
+* Use proper avatar
+* Expand to see offline streamers

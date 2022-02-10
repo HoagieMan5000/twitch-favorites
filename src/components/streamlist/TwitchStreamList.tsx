@@ -1,19 +1,24 @@
 import React from "react"
-import { StreamData } from "../../service/TwitchClientTypes"
+import { StreamData, UserData } from "../../service/TwitchClientTypes"
 import { TwitchStream } from "./TwitchStream";
 
 export interface TwitchStreamListProps {
+    follows: UserData[]
     streams: StreamData[]
 }
 
 export const TwitchStreamList = (props: TwitchStreamListProps) => {
-    const { streams } = props;
+    const { follows, streams } = props;
 
     return <div>{
-        streams.map(stream => <>
-            <TwitchStream
-                stream={stream}
-            />
-        </>
+        streams.map(stream => {
+            const userData = follows.find(f => f.id === stream.user_id);
+            return <>
+                <TwitchStream
+                    userData={userData}
+                    stream={stream}
+                />
+            </>
+        }
         )}</div>
 }

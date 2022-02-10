@@ -1,5 +1,5 @@
 import React from "react";
-import { StreamData, UserFollows } from "../../service/TwitchClientTypes";
+import { StreamData, UserData } from "../../service/TwitchClientTypes";
 import { FlexCol } from "../../util/FlexBox";
 import { FavoritesCategory } from "./FavoritesCategory";
 import { FavoritesData } from "./FavoritesTypes";
@@ -7,7 +7,7 @@ import { FavoritesData } from "./FavoritesTypes";
 export interface FavoritesListContainerProps {
     favorites: FavoritesData
     streams: StreamData[]
-    following: UserFollows[]
+    following: UserData[]
 
     onFavoritesChange: (value: FavoritesData) => void
 }

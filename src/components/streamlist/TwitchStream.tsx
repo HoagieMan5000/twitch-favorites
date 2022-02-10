@@ -1,6 +1,6 @@
 import { Link } from "@mui/material";
 import React from "react"
-import { StreamData } from "../../service/TwitchClientTypes"
+import { StreamData, UserData } from "../../service/TwitchClientTypes"
 import { FlexCol, FlexRow } from "../../util/FlexBox";
 
 import LaunchIcon from '@mui/icons-material/Launch';
@@ -11,18 +11,19 @@ const avatarWidth = 50;
 const avatarHeight = 50;
 
 export interface TwitchStreamProps {
+    userData?: UserData
     stream: StreamData
 }
 
 export const TwitchStream = (props: TwitchStreamProps) => {
-    const { stream } = props;
+    const { userData, stream } = props;
 
     return (
     <FlexRow justifyContent="space-between" alignItems="center">
         <FlexRow alignItems="center" flexGrow={1}>
             <div className="streamer-avatar-container">
                 <img className="streamer-avatar"
-                    src={stream.thumbnail_url
+                    src={userData?.profile_image_url
                         .replace("{width}", avatarWidth.toString())
                         .replace("{height}", avatarHeight.toString())
                     }
