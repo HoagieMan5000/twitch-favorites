@@ -3,16 +3,12 @@ export const defaultFavoritesData: FavoritesData  = {
         {
             channelName: "marinemammalrescue",
             channelId: "538506717",
-            categoryIds: new Set<string>([
-                "3",
-            ])
+            categoryIds: ["3"]
         },
         {
             channelName: "roxygunnproject",
             channelId: "563474463",
-            categoryIds: new Set<string>([
-                "2"
-            ])
+            categoryIds: ["2"],
         }
     ],
     categories: {
@@ -39,7 +35,7 @@ export interface FavoritesData {
 export interface StreamFavoritesData {
     channelId: string
     channelName: string
-    categoryIds: Set<string>
+    categoryIds: string[]
 }
 
 export interface FavoriteCategory {

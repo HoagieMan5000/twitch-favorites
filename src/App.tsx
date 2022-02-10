@@ -10,8 +10,9 @@ import { TwitchFollowedStreamList } from "./components/followerlist/TwitchFollow
 import { useStreams } from "./hooks/Streams";
 import { TwitchStreamList } from "./components/streamlist/TwitchStreamList";
 import { Divider } from "@mui/material";
-import { defaultFavoritesData } from "./components/favoriteslist/FavoritesTypes";
+import { defaultFavoritesData, FavoritesData } from "./components/favoriteslist/FavoritesTypes";
 import { FavoritesListContainer } from "./components/favoriteslist/FavoritesListContainer";
+import ChromeStorage from "./util/chrome/ChromeStorage";
 
 const App = () => {
 
@@ -23,6 +24,15 @@ const App = () => {
   useEffect(() => {
     getUser();
   }, []);
+
+  useEffect(() => {
+    async function load() {
+      const loadedFavorites = await (new ChromeStorage()).getSync(["favorites"]);
+      console.log({loadedFavorites});
+      setFavorites(loadedFavorites?.favorites as FavoritesData ?? defaultFavoritesData);
+    }
+    load();
+  }, [])
 
   console.log({ favorites });
 
@@ -43,7 +53,12 @@ const App = () => {
             streams={streams ?? []}
             following={followerList ?? []}
 
-            onFavoritesChange={(newValue) => setFavorites(newValue)}
+            onFavoritesChange={(newValue) => {
+              new ChromeStorage().setSync({
+                favorites
+              });
+              setFavorites(newValue)
+            }}
           />
         </Grid>
         {/*
