@@ -15,6 +15,11 @@ export default class LoginUtil {
         }
     }
 
+    public static async logout() {
+        const storage = new ChromeStorage();
+        await storage.removeLocal(["twitchAccessToken"]);
+    }
+
     public static parseAccessToken(url?: string) {
         if (url) {
             const qs = queryString.parse(url.substring(url.indexOf('#')));
