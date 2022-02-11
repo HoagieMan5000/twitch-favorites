@@ -3,7 +3,7 @@ import TwitchClient from "../service/TwitchClient";
 import { StreamData, UserData } from "../service/TwitchClientTypes";
 import LoginUtil from "../util/login/LoginUtil";
 
-export const useStreams = (userFollows?: UserData[]): [StreamData[] | undefined, () => Promise<void>] => {
+export const useStreams = (userFollows?: UserData[], callback?: () => void): [StreamData[] | undefined, () => Promise<void>] => {
   const [streams, setStreams] = useState<StreamData[] | undefined>(undefined);
 
   useEffect(() => {
@@ -25,6 +25,9 @@ export const useStreams = (userFollows?: UserData[]): [StreamData[] | undefined,
         numRequested += numPerRequest;
       }
       setStreams(streamData);
+      if (callback) {
+        callback();
+      }
     }
   }
 

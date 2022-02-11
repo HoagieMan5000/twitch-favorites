@@ -5,7 +5,7 @@ import LoginUtil from "../util/login/LoginUtil";
 
 export const useFollowingList = (userData?: UserData): [UserData[] | undefined, () => Promise<void>] => {
   const [followingList, setFollowingList] = useState<UserFollows[] | undefined>(undefined);
-  const [followingUserData, setFollowingUserData] = useState<UserData[]>([]);
+  const [followingUserData, setFollowingUserData] = useState<UserData[] | undefined>(undefined);
 
   useEffect(() => {
     getFollowing();
