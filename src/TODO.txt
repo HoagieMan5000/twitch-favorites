@@ -3,5 +3,5 @@ TODO
 * Make it sexy
 * Add/remove categories
 * Expand to see offline streamers
+
 * Save data by logged in twitch user
-* Loaders

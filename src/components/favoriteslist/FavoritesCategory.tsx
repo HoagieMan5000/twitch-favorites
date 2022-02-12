@@ -1,13 +1,13 @@
-import { Autocomplete, Button, CircularProgress, Divider, TextField } from "@mui/material";
+import { CircularProgress, Divider, TextField } from "@mui/material";
 import React, { useContext, useState } from "react";
-import { useUserData } from "../../hooks/UserData";
 import { StreamData, UserData, UserFollows } from "../../service/TwitchClientTypes";
 import { AppStateContext } from "../../state/AppStateContextProvider";
 import { FlexCol, FlexRow } from "../../util/FlexBox";
-import { StreamerAvatar } from "../StreamerAvatar";
 import { TwitchStream } from "../streamlist/TwitchStream";
+import { FavoritesCategoryConfig } from "./FavoritesCategoryConfig";
 import { FavoriteCategory, FavoritesData, StreamFavoritesData } from "./FavoritesTypes";
-import { StreamerSearchItem } from "./StreamerSearchItem";
+
+import SettingsIcon from '@mui/icons-material/Settings';
 
 export interface FavoritesCategoryProps {
     favorites: FavoritesData
@@ -23,7 +23,7 @@ export const FavoritesCategory = (props: FavoritesCategoryProps) => {
 
     const { appState } = useContext(AppStateContext);
 
-    const [selectedStreamer, setSelectedStreamer] = useState<string | undefined | null>(undefined);
+    const [showSettings, setShowSettings] = useState(false);
 
     const favoritesInCategory = favorites.favorites.filter(favorite => favorite.categoryIds.includes(category.id));
     const liveStreamsInCategory = streams.filter(stream => !!favoritesInCategory.find(fav => fav.channelId === stream.user_id));
@@ -60,25 +60,20 @@ export const FavoritesCategory = (props: FavoritesCategoryProps) => {
 
     return <FlexCol className="favorite-category-container">
         <FlexCol>
-            <div className="favorite-category-name">{category.label}</div>
-            <FlexRow marginBottom={"10px"}>
-                <Autocomplete
-                    disablePortal
-                    id="followed-streamers-selector"
-                    size="small"
-                    options={following.map(f => f.login)}
-                    sx={{ width: 260 }}
-                    renderInput={(params) => <TextField {...params} label="Add Streamer" />}
-                    renderOption={(props, option) => <StreamerSearchItem optionProps={props} option={option} following={following} />}
-                    onChange={(event: any, newValue: string | null) => setSelectedStreamer(newValue)}
+            <FlexRow>
+                <div className="favorite-category-name">{category.label}</div>
+                <SettingsIcon
+                    style={{color: "lightgrey", cursor: "pointer"}}
+                    onClick={() => setShowSettings(!showSettings)}
                 />
-                <Button onClick={() => {
-                    const streamer = following.find(f => f.login === selectedStreamer);
-                    if (streamer) {
-                        onAddStreamer(streamer)
-                    }
-                }}
-                >Add Streamer</Button>
+            </FlexRow>
+            <FlexRow marginBottom={"10px"}>
+                {showSettings &&
+                    <FavoritesCategoryConfig
+                        following={following}
+                        onAddStreamer={onAddStreamer}
+                    />
+                }
             </FlexRow>
         </FlexCol>
         <FlexCol>
@@ -88,7 +83,7 @@ export const FavoritesCategory = (props: FavoritesCategoryProps) => {
                     stream={liveStream}
                     onRemove={onRemoveStreamer}
                 />
-            )): []}
+            )) : []}
             {appState.isLoading && <CircularProgress />}
         </FlexCol>
         <Divider />
