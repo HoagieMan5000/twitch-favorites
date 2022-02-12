@@ -7,6 +7,7 @@ import { FlexCol, FlexRow } from "../../util/FlexBox";
 import { StreamerAvatar } from "../StreamerAvatar";
 import { TwitchStream } from "../streamlist/TwitchStream";
 import { FavoriteCategory, FavoritesData, StreamFavoritesData } from "./FavoritesTypes";
+import { StreamerSearchItem } from "./StreamerSearchItem";
 
 export interface FavoritesCategoryProps {
     favorites: FavoritesData
@@ -68,6 +69,7 @@ export const FavoritesCategory = (props: FavoritesCategoryProps) => {
                     options={following.map(f => f.login)}
                     sx={{ width: 260 }}
                     renderInput={(params) => <TextField {...params} label="Add Streamer" />}
+                    renderOption={(props, option) => <StreamerSearchItem optionProps={props} option={option} following={following} />}
                     onChange={(event: any, newValue: string | null) => setSelectedStreamer(newValue)}
                 />
                 <Button onClick={() => {
@@ -90,5 +92,5 @@ export const FavoritesCategory = (props: FavoritesCategoryProps) => {
             {appState.isLoading && <CircularProgress />}
         </FlexCol>
         <Divider />
-    </FlexCol>
+    </FlexCol >
 }
