@@ -21,8 +21,9 @@
 .favorite-category-name {
     font-size: 16px;
     font-weight: 600;
-    margin-bottom: 10px;
+    margin-left: 10px;
     margin-right: 20px;
+    color: white;
 }
 
 .favorite-category-container {

@@ -1,14 +1,13 @@
-import { CircularProgress, Divider, TextField } from "@mui/material";
-import React, { useContext, useState } from "react";
-import { StreamData, UserData, UserFollows } from "../../service/TwitchClientTypes";
+import { CircularProgress, Divider } from "@mui/material";
+import React, { useContext } from "react";
+import { StreamData, UserData } from "../../service/TwitchClientTypes";
 import { AppStateContext } from "../../state/AppStateContextProvider";
-import { FlexCol, FlexRow } from "../../util/FlexBox";
+import { FlexCol } from "../../util/FlexBox";
 import { TwitchStream } from "../streamlist/TwitchStream";
-import { FavoritesCategoryConfig } from "./FavoritesCategoryConfig";
 import { FavoriteCategory, FavoritesData, StreamFavoritesData } from "./FavoritesTypes";
 
-import SettingsIcon from '@mui/icons-material/Settings';
 import { FavoritesOfflineList } from "./FavoritesOfflineList";
+import { FavoriteCategoryBanner } from "./FavoriteCategoryBanner";
 
 export interface FavoritesCategoryProps {
     favorites: FavoritesData
@@ -23,8 +22,6 @@ export const FavoritesCategory = (props: FavoritesCategoryProps) => {
     const { category, streams, following, favorites } = props;
 
     const { appState } = useContext(AppStateContext);
-
-    const [showSettings, setShowSettings] = useState(false);
 
     const favoritesInCategory = favorites.favorites.filter(favorite => favorite.categoryIds.includes(category.id));
     const liveStreamsInCategory = streams.filter(stream => !!favoritesInCategory.find(fav => fav.channelId === stream.user_id));
@@ -60,24 +57,22 @@ export const FavoritesCategory = (props: FavoritesCategoryProps) => {
     }
 
     return <FlexCol className="favorite-category-container">
-        <FlexCol>
-            <FlexRow>
-                <div className="favorite-category-name">{category.label}</div>
-                <SettingsIcon
-                    style={{color: "lightgrey", cursor: "pointer"}}
-                    onClick={() => setShowSettings(!showSettings)}
-                />
-            </FlexRow>
-            <FlexRow marginBottom={"10px"}>
-                {showSettings &&
-                    <FavoritesCategoryConfig
-                        following={following}
-                        onAddStreamer={onAddStreamer}
-                    />
-                }
-            </FlexRow>
-        </FlexCol>
-        <FlexCol>
+        <FavoriteCategoryBanner
+            category={category}
+            following={following}
+            onAddStreamer={onAddStreamer}
+            onConfigChange={(config: FavoriteCategory) => {
+                props.onFavoritesChange({
+                    ...favorites,
+                    categories: {
+                        ...favorites.categories,
+                        [config.id]: config
+                    }
+                })
+            }
+            }
+        />
+        <FlexCol style={{ margin: 5 }}>
             {!appState.isLoading ? liveStreamsInCategory.map(liveStream => (
                 <TwitchStream
                     userData={following.find(f => f.id === liveStream.user_id)}

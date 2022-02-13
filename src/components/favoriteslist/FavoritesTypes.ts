@@ -1,3 +1,5 @@
+export const defaultCategoryColor = "#616161";
+
 export const defaultFavoritesData: FavoritesData  = {
     favorites: [
         {
@@ -15,14 +17,17 @@ export const defaultFavoritesData: FavoritesData  = {
         "1": {
             id: "1",
             label: "Modding",
+            color: defaultCategoryColor
         },
         "2": {
             id: "2",
             label: "Music",
+            color: defaultCategoryColor
         },
         "3": {
             id: "3",
             label: "Other",
+            color: defaultCategoryColor
         },
     }
 }
@@ -41,4 +46,5 @@ export interface StreamFavoritesData {
 export interface FavoriteCategory {
     id: string
     label: string
+    color: string
 }
