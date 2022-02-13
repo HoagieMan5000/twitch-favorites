@@ -8,6 +8,7 @@ import { FavoritesCategoryConfig } from "./FavoritesCategoryConfig";
 import { FavoriteCategory, FavoritesData, StreamFavoritesData } from "./FavoritesTypes";
 
 import SettingsIcon from '@mui/icons-material/Settings';
+import { FavoritesOfflineList } from "./FavoritesOfflineList";
 
 export interface FavoritesCategoryProps {
     favorites: FavoritesData
@@ -86,6 +87,14 @@ export const FavoritesCategory = (props: FavoritesCategoryProps) => {
             )) : []}
             {appState.isLoading && <CircularProgress />}
         </FlexCol>
+        <FavoritesOfflineList
+            favorites={favorites}
+            category={category}
+            streams={streams}
+            following={following}
+
+            onRemove={onRemoveStreamer}
+        />
         <Divider />
     </FlexCol >
 }
