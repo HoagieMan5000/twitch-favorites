@@ -3,6 +3,7 @@ import React, { useState } from "react"
 import { ChromePicker, ColorResult } from "react-color";
 import { UserData } from "../../service/TwitchClientTypes";
 import { FlexCol, FlexRow } from "../../util/FlexBox";
+import { ColorSelector } from "../ColorSelector";
 import { FavoriteCategory } from "./FavoritesTypes";
 import { StreamerSearchItem } from "./StreamerSearchItem";
 
@@ -18,7 +19,6 @@ export const FavoritesCategoryConfig = (props: FavoritesCategoryConfigProps) => 
     const { following, category, onAddStreamer } = props;
 
     const [selectedStreamer, setSelectedStreamer] = useState<string | undefined | null>(undefined);
-    const [selectedColor, setSelectedColor] = useState<string>(props.category.color);
 
     return <FlexCol>
         <FlexRow marginBottom={"10px"}>
@@ -40,12 +40,9 @@ export const FavoritesCategoryConfig = (props: FavoritesCategoryConfigProps) => 
             }}
             >Add Streamer</Button>
         </FlexRow>
-        <ChromePicker
-            color={selectedColor}
-            onChange={(newColor: ColorResult) => {
-                setSelectedColor(newColor.hex)}
-            }
-            onChangeComplete={(newColor: ColorResult) => props.onChangeColor(newColor.hex)}
+        <ColorSelector
+            color={category.color}
+            onChange={(newColor: string) => props.onChangeColor(newColor)}
         />
     </FlexCol>
 }
