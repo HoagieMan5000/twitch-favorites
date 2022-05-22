@@ -1,9 +1,8 @@
 import React, { useContext } from "react";
-import { StreamData, UserData } from "../../service/TwitchClientTypes";
 import { TwitchDataStateContext } from "../../state/TwitchDataStateContextProvider";
 import { FlexCol } from "../../util/FlexBox";
 import { FavoritesCategory } from "./FavoritesCategory";
-import { FavoritesData } from "./FavoritesTypes";
+import { FavoriteCategory, FavoritesData } from "./FavoritesTypes";
 
 export interface FavoritesListContainerProps {
     favorites: FavoritesData
@@ -24,6 +23,15 @@ export const FavoritesListContainer = (props: FavoritesListContainerProps) => {
                 following={following ?? []}
 
                 onFavoritesChange={props.onFavoritesChange}
+                onCategoryDataChange={(newCategory: FavoriteCategory) => {
+                    props.onFavoritesChange({
+                        ...favorites,
+                        categories: {
+                            ...favorites.categories,
+                            [newCategory.id]: newCategory
+                        }
+                    })
+                }}
             />
         ))}
     </FlexCol>
