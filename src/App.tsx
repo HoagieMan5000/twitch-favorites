@@ -3,7 +3,7 @@ import "./App.css";
 import { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 
-import { defaultFavoritesData, FavoritesData } from "./components/favoriteslist/FavoritesTypes";
+import { defaultFavoritesData, FavoriteCategory, FavoritesData } from "./components/favoriteslist/FavoritesTypes";
 import { FavoritesListContainer } from "./components/favoriteslist/FavoritesListContainer";
 import ChromeStorage from "./util/chrome/ChromeStorage";
 import { PopHeader } from "./components/PopHeader";

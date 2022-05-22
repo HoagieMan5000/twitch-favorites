@@ -15,14 +15,17 @@ export const defaultFavoritesData: FavoritesData  = {
         "1": {
             id: "1",
             label: "Modding",
+            color: "light-grey"
         },
         "2": {
             id: "2",
             label: "Music",
+            color: "white"
         },
         "3": {
             id: "3",
             label: "Other",
+            color: "white"
         },
     }
 }
@@ -41,4 +44,5 @@ export interface StreamFavoritesData {
 export interface FavoriteCategory {
     id: string
     label: string
+    color: string
 }

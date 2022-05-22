@@ -17,6 +17,7 @@ export interface FavoritesCategoryProps {
     following: UserData[]
 
     onFavoritesChange: (value: FavoritesData) => void
+    onCategoryDataChange: (value: FavoriteCategory) => void
 }
 
 export const FavoritesCategory = (props: FavoritesCategoryProps) => {
@@ -49,6 +50,13 @@ export const FavoritesCategory = (props: FavoritesCategoryProps) => {
         }
     }
 
+    function onChangeColor(newColor: string) {
+        props.onCategoryDataChange({
+            ...props.category,
+            color: newColor
+        })
+    }
+
     function onRemoveStreamer(id: string) {
         let existingFavorite = favorites.favorites.find(fav => fav.channelId === id);
         if (existingFavorite) {
@@ -61,7 +69,7 @@ export const FavoritesCategory = (props: FavoritesCategoryProps) => {
 
     return <FlexCol className="favorite-category-container">
         <FlexCol>
-            <FlexRow>
+            <FlexRow style={{backgroundColor: category.color ?? "white"}}>
                 <div className="favorite-category-name">{category.label}</div>
                 <SettingsIcon
                     style={{color: "lightgrey", cursor: "pointer"}}
@@ -72,6 +80,8 @@ export const FavoritesCategory = (props: FavoritesCategoryProps) => {
                 {showSettings &&
                     <FavoritesCategoryConfig
                         following={following}
+                        category={category}
+                        onChangeColor={onChangeColor}
                         onAddStreamer={onAddStreamer}
                     />
                 }
