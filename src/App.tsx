@@ -40,15 +40,6 @@ const App = () => {
                   }}
                 />
               </Grid>
-              {/*
-          <TwitchStreamList
-            streams={streams ?? []}
-          />
-          <Divider />
-          <TwitchFollowedStreamList
-            following={followerList ?? []}
-          />
-        */}
             </Grid>
           </div >
         </div>
