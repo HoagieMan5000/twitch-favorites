@@ -9,6 +9,7 @@ import { FavoriteCategory, FavoritesData, StreamFavoritesData } from "./Favorite
 
 import SettingsIcon from '@mui/icons-material/Settings';
 import { FavoritesOfflineList } from "./FavoritesOfflineList";
+import { CategoryActionMenu } from "./CategoryActionMenu";
 
 export interface FavoritesCategoryProps {
     favorites: FavoritesData
@@ -18,6 +19,7 @@ export interface FavoritesCategoryProps {
 
     onFavoritesChange: (value: FavoritesData) => void
     onCategoryDataChange: (value: FavoriteCategory) => void
+    onCategoryRemove: () => void
 }
 
 export const FavoritesCategory = (props: FavoritesCategoryProps) => {
@@ -69,12 +71,19 @@ export const FavoritesCategory = (props: FavoritesCategoryProps) => {
 
     return <FlexCol className="favorite-category-container">
         <FlexCol>
-            <FlexRow style={{backgroundColor: category.color ?? "white"}}>
+            <FlexRow style={{backgroundColor: category.color ?? "white"}} justifyContent="space-between">
+                <FlexRow>
                 <div className="favorite-category-name">{category.label}</div>
                 <SettingsIcon
                     style={{color: "lightgrey", cursor: "pointer"}}
                     onClick={() => setShowSettings(!showSettings)}
                 />
+                </FlexRow>
+                <FlexRow>
+                    <CategoryActionMenu onRemove={() => {
+                        props.onCategoryRemove();
+                    }}/>
+                </FlexRow>
             </FlexRow>
             <FlexRow marginBottom={"10px"}>
                 {showSettings &&

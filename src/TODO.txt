@@ -1,8 +1,9 @@
 TODO
 
 * Make it sexy
-* Add/remove categories
+* Be able to log out completely
 
+* Move data fetch to background script
 * Auto-update
 * Indicators for number of live streams (enabled by category)
 * Save data by logged in twitch user
