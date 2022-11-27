@@ -6,6 +6,7 @@ import { TwitchDataStateContext } from "../../state/TwitchDataStateContextProvid
 
 import { v4 as uuidv4 } from 'uuid';
 import ChromeStorage from "../../util/chrome/ChromeStorage";
+import { FlexRow } from "../../util/FlexBox";
 
 export interface CategoryAdderProps {
 
@@ -20,34 +21,37 @@ export const CategoryAdder = (props: CategoryAdderProps) => {
     const userId = twitchContext.twitchDataState.userData?.id;
 
     return <>
-        <TextField
-            label="Category Name"
-            value={newCategoryName}
-            onChange={(ev: any) => setNewCategoryName(ev.target.value)}
-        />
-        <Button onClick={() => {
-            if (userId && newCategoryName) {
-                const categoryId = uuidv4()
-                const newState: FavoritesState = {
-                    ...(favoritesContext.state ?? defaultFavoritesState),
-                    categories: {
-                        ...favoritesContext.state?.categories,
-                        [categoryId]: {
-                            id: categoryId,
-                            label: newCategoryName,
-                            color: "white"
+        <FlexRow marginBottom={2}>
+            <TextField
+                size="small"
+                label="Category Name"
+                value={newCategoryName}
+                onChange={(ev: any) => setNewCategoryName(ev.target.value)}
+            />
+            <Button onClick={() => {
+                if (userId && newCategoryName) {
+                    const categoryId = uuidv4()
+                    const newState: FavoritesState = {
+                        ...(favoritesContext.state ?? defaultFavoritesState),
+                        categories: {
+                            ...favoritesContext.state?.categories,
+                            [categoryId]: {
+                                id: categoryId,
+                                label: newCategoryName,
+                                color: "white"
+                            }
                         }
                     }
+                    new ChromeStorage().setSync({
+                        [userId]: {
+                            ...newState
+                        }
+                    });
+                    favoritesContext.setState(newState)
                 }
-                new ChromeStorage().setSync({
-                    [userId]: {
-                        ...newState
-                    }
-                });
-                favoritesContext.setState(newState)
-            }
-        }}>
-            Add Category
-        </Button>
+            }}>
+                Add Category
+            </Button>
+        </FlexRow>
     </>
 }

@@ -25,9 +25,7 @@ const MainApp = () => {
             <div className="App">
                 <Grid container>
                     <Grid item xs={12}>
-                        <FlexRow>
-                            <CategoryAdder />
-                        </FlexRow>
+                        <CategoryAdder />
                     </Grid>
                     <Grid item xs={12}>
                         {
