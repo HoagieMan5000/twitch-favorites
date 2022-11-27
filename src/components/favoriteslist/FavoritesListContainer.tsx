@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { FavoritesStateContext } from "../../state/FavoritesStateContextProvider";
 import { TwitchDataStateContext } from "../../state/TwitchDataStateContextProvider";
 import { FlexCol } from "../../util/FlexBox";
 import { FavoritesCategory } from "./FavoritesCategory";
@@ -13,7 +14,9 @@ export const FavoritesListContainer = (props: FavoritesListContainerProps) => {
     const { favorites } = props;
 
     const { twitchDataState: { following, streams } } = useContext(TwitchDataStateContext);
+    const favoritesContext = useContext(FavoritesStateContext);
 
+    console.log({following, streams, favorites});
     return <FlexCol>
         {Object.keys(favorites.categories).map(categoryId => (
             <FavoritesCategory
@@ -31,6 +34,13 @@ export const FavoritesListContainer = (props: FavoritesListContainerProps) => {
                             [newCategory.id]: newCategory
                         }
                     })
+                }}
+                onCategoryRemove={() => {
+                    const newState = {
+                        ...favoritesContext.state
+                    } as FavoritesData;
+                    delete newState.categories?.[categoryId]
+                    props.onFavoritesChange(newState);
                 }}
             />
         ))}

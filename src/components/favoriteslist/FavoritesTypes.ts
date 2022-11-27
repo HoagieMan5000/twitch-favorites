@@ -1,15 +1,5 @@
 export const defaultFavoritesData: FavoritesData  = {
     favorites: [
-        {
-            channelName: "marinemammalrescue",
-            channelId: "538506717",
-            categoryIds: ["3"]
-        },
-        {
-            channelName: "roxygunnproject",
-            channelId: "563474463",
-            categoryIds: ["2"],
-        }
     ],
     categories: {
         "1": {
