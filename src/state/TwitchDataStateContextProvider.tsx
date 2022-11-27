@@ -30,7 +30,7 @@ export interface TwitchDataStateContextProviderProps {
 
 export const TwitchDataStateContextProvider = (props: TwitchDataStateContextProviderProps) => {
     const [userData, getUser, logout] = useUserData();
-    const [followerList, getFollowing] = useFollowingList(userData);
+    const [followerList] = useFollowingList(userData);
     const [streams, getStreams] = useStreams(followerList);
 
     useEffect(() => {
