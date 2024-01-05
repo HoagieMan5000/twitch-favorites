@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { UserData } from "../service/TwitchClientTypes";
 import CachedDataProvider from "../util/CachedDataProvider";
+import UserDataProvider from "../providers/UserDataProvider";
 
-export const useUserData = (): [UserData | undefined, () => Promise<void>, () => void] => {
+export const useUserData = (accessToken: string | undefined): [UserData | undefined, () => Promise<void>, () => void, () => Promise<void>] => {
   const [userData, setUserData] = useState<UserData | undefined>(undefined);
 
   const getUser = async () => {
@@ -12,5 +13,19 @@ export const useUserData = (): [UserData | undefined, () => Promise<void>, () =>
     }
   }
 
-  return [userData, getUser, () => setUserData(undefined)]
+  const refreshUser = async () => {
+    const userData = await UserDataProvider.getUser();
+    if (userData) {
+      setUserData(userData);
+    }
+  }
+
+  useEffect(() => {
+    if (accessToken) {
+      getUser();
+    }
+  }, [accessToken]);
+
+
+  return [userData, getUser, () => setUserData(undefined), refreshUser]
 }

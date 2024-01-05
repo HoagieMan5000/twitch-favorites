@@ -1,4 +1,4 @@
-import { StreamData, UserData, UserFollows } from "../service/TwitchClientTypes";
+import { StreamData, UserData, UserFollow } from "../service/TwitchClientTypes";
 import ChromeStorage from "./chrome/ChromeStorage";
 
 export default class CachedDataProvider {
@@ -14,12 +14,24 @@ export default class CachedDataProvider {
         })
     }
 
+    public static async getTwitchAccessToken(): Promise<string | undefined> {
+        const storage = new ChromeStorage();
+        return (await storage.getLocal(["twitchAccessToken"])).twitchAccessToken;
+    }
+
+    public static setTwitchAccessToken(token?: string) {
+        const storage = new ChromeStorage();
+        return storage.setLocal({
+            twitchAccessToken: token
+        })
+    }
+
     public static async getFollowingList() {
         const storage = new ChromeStorage();
         return (await storage.getLocal(["followingList"]))?.followingList
     }
 
-    public static setFollowingList(followingList?: UserFollows[]) {
+    public static setFollowingList(followingList?: UserFollow[]) {
         const storage = new ChromeStorage();
         return storage.setLocal({
             followingList

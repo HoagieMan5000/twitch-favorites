@@ -20,6 +20,8 @@ export const FavoritesCategoryConfig = (props: FavoritesCategoryConfigProps) => 
 
     const [selectedStreamer, setSelectedStreamer] = useState<string | undefined | null>(undefined);
 
+    console.log({ following });
+
     return <FlexCol>
         <FlexRow marginBottom={"10px"}>
             <Autocomplete

@@ -7,16 +7,18 @@ import LoginUtil from "../../util/login/LoginUtil";
 
 export interface LoginProps {
     userData?: UserData
+    accessToken?: string
 
     onLogin: () => void
     onLogout: () => void
 }
 
 export const Login = (props: LoginProps) => {
-    const { userData, onLogin, onLogout } = props;
+    const { userData, accessToken, onLogin, onLogout } = props;
+    console.log({ accessToken });
 
     return <div>
-        {!userData &&
+        {(!accessToken || !userData) &&
             <Button
                 variant="contained"
                 color="secondary"

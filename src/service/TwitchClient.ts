@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import NodeCache from "node-cache";
 import Config from "../Config";
 import CacheManager from "../util/CacheManager";
-import { ChannelData, DataResponse, Game, LiveChannelData, Paginated, StreamData, UserData, UserFollows, UsersFollows, UserSubscriptions } from "./TwitchClientTypes";
+import { ChannelData, DataResponse, Game, LiveChannelData, Paginated, StreamData, UserData, UserFollow, UserFollows, UserSubscriptions } from "./TwitchClientTypes";
 
 export interface ValidatedSession {
     expires_in: number
@@ -39,8 +39,8 @@ export default class TwitchClient {
         return data.data?.[0];
     }
 
-    async getUsers(usernames: string[]): Promise<UserData[]> {
-        const data = await this.getRequest(`https://api.twitch.tv/helix/users?${usernames.map(username => `login=${username}&`).join('')}`, true);
+    async getUsers(userIds: string[]): Promise<UserData[]> {
+        const data = await this.getRequest(`https://api.twitch.tv/helix/users?${userIds.map(userId => `id=${userId}`).join('&')}`, true);
         return data.data;
     }
 
@@ -59,13 +59,13 @@ export default class TwitchClient {
         return data.data;
     }
 
-    async getAllUsersFollowedChannels(broadcasterLogin: string): Promise<UserFollows[]> {
+    async getAllUsersFollowedChannels(broadcasterLogin: string): Promise<UserFollow[]> {
         let after = undefined;
-        const follows: UserFollows[] = [];
+        const follows: UserFollow[] = [];
         const broadcasterId = await this.getUserId(broadcasterLogin);
         do {
-            const url = `https://api.twitch.tv/helix/users/follows?from_id=${broadcasterId}&first=100${after ? `&after=${after}` : ``}`;
-            const page = await this.getRequest(url, true) as Paginated<UserFollows[]>;
+            const url = `https://api.twitch.tv/helix/channels/followed?user_id=${broadcasterId}&first=100${after ? `&after=${after}` : ``}`;
+            const page = await this.getRequest(url, true) as Paginated<UserFollow[]>;
             follows.push(...page.data);
             after = page.pagination?.cursor;
         } while (after);
@@ -118,43 +118,23 @@ export default class TwitchClient {
         return undefined;
     }
 
-    async getChannelByUser(username: string): Promise<ChannelData | undefined> {
-        const userData = await this.getUsers([username]);
-        if (userData && userData.length > 0) {
-            const broadcasterId = userData[0].id;
-            const channelData = await this.getChannel(broadcasterId);
-            if (channelData && channelData.length > 0) {
-                return channelData[0];
-            }
-        }
-        return undefined;
-    }
+    async getFollows(props: { userId: string, max?: number, cursor?: string }): Promise<UserFollow[]> {
+        const { userId, max, cursor } = props;
 
-    async getChannelsByUsers(usernames: string[]): Promise<ChannelData[]> {
-        let channelData: ChannelData[] = [];
-        const usersData = await this.getUsers(usernames);
-        await Promise.all(usersData.map(async userData => {
-            if (userData) {
-                const broadcasterId = userData.id;
-                const channelData = await this.getChannel(broadcasterId);
-                if (channelData && channelData.length > 0) {
-                    channelData.push(...channelData);
-                }
-            }
-        }));
-        return channelData;
-    }
+        const follows: UserFollow[] = [];
+        let currCursor: string | undefined = cursor;
+        do {
+            let query = [];
+            query.push(userId ? `user_id=${userId}` : '');
+            query.push(max ? `first=${max}` : '');
+            query.push(cursor ? `after=${currCursor}` : '');
+            const request = `https://api.twitch.tv/helix/users/follows?${query.join("&")}`;
+            const data = await this.getRequest(request, true);
+            follows.push(...data.data);
+            currCursor = data.pagination?.cursor;
+        } while (currCursor)
 
-    async getFollows(props: { toId?: string, fromId?: string, max?: number, cursor?: string }): Promise<UsersFollows> {
-        const { toId, fromId, max, cursor } = props;
-        let query = [];
-        query.push(toId ? `to_id=${toId}` : '');
-        query.push(fromId ? `from_id=${fromId}` : '');
-        query.push(max ? `first=${max}` : '');
-        query.push(cursor ? `after=${cursor}` : '');
-        const request = `https://api.twitch.tv/helix/users/follows?${query.join("&")}`;
-        const data = await this.getRequest(request, true);
-        return data;
+        return follows;
     }
 
     async getRequest(request: string, useCache: boolean) {

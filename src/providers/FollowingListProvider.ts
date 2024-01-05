@@ -1,5 +1,5 @@
 import TwitchClient from "../service/TwitchClient";
-import { UserData, UserFollows } from "../service/TwitchClientTypes";
+import { UserData, UserFollow } from "../service/TwitchClientTypes";
 import LoginUtil from "../util/login/LoginUtil";
 
 export default class FollowingListProvider {
@@ -13,7 +13,7 @@ export default class FollowingListProvider {
         return undefined;
     }
 
-    public static async getFollowingUserData(followingList?: UserFollows[]) {
+    public static async getFollowingUserData(followingList?: UserFollow[]) {
         const loginData = await LoginUtil.getLogin();
         if (loginData?.accessToken && followingList) {
             const client = new TwitchClient(loginData.accessToken);
@@ -22,7 +22,7 @@ export default class FollowingListProvider {
             const following: UserData[] = [];
             while (numRequested <= followingList.length) {
                 const streamsToRequest = followingList.slice(numRequested, numRequested + numPerRequest);
-                const streamsResponse = await client.getUsers(streamsToRequest.map(u => u.to_name));
+                const streamsResponse = await client.getUsers(streamsToRequest.map(u => u.broadcaster_id));
                 following.push(...streamsResponse)
 
                 numRequested += numPerRequest;
