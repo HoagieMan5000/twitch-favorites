@@ -6,6 +6,8 @@ import { useUserData } from "../hooks/UserData";
 import { AppStateContext } from "./AppStateContextProvider";
 import { defaultTwitchDataState, TwitchDataState } from "./TwitchDataState";
 import { useTwitchAccessToken } from "../hooks/TwitchAccessToken";
+import { useChromeStorageSync } from "../hooks/ChromeStorageSync";
+import { UserData } from "../service/TwitchClientTypes";
 
 export interface TwitchDataStateContextType {
     twitchDataState: TwitchDataState,
@@ -38,7 +40,13 @@ export interface TwitchDataStateContextProviderProps {
 export const TwitchDataStateContextProvider = (props: TwitchDataStateContextProviderProps) => {
     const [accessToken, getToken, resetToken] = useTwitchAccessToken();
     const [userData, getUser, logout, refreshUser] = useUserData(accessToken);
-    const [followerList] = useFollowingList(userData);
+    
+    //const [followerList] = useFollowingList(userData);
+    const [followerList] = useChromeStorageSync<UserData[]>("followingUserData", {
+        type: "local",
+        defaultValue: [],
+    });
+    
     const [streams, getStreams] = useStreams(followerList);
 
     useEffect(() => {

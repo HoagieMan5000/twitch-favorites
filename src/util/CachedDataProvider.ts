@@ -2,7 +2,7 @@ import { StreamData, UserData, UserFollow } from "../service/TwitchClientTypes";
 import ChromeStorage from "./chrome/ChromeStorage";
 
 export default class CachedDataProvider {
-    public static async getUserData() {
+    public static async getUserData(): Promise<UserData> {
         const storage = new ChromeStorage();
         return (await storage.getLocal(["userData"]))?.userData
     }
