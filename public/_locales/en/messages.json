@@ -1,0 +1,10 @@
+{
+  "extensionDescription": {
+    "description": "Twitch Favorites Description",
+    "message": "Keep track of your favorite Twitch channels"
+  },
+  "extensionName": {
+    "description": "Twitch Favorites Name",
+    "message": "Twitch Favorites"
+  }
+}
