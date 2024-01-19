@@ -28,4 +28,4 @@ shadowRoot.appendChild(styleElement);
  * Please refer to the PR link above and go back to the contentStyle.css implementation, or raise a PR if you have a better way to improve it.
  */
 
-createRoot(rootIntoShadow).render(<App param="root"/>);
+createRoot(rootIntoShadow).render(<App />);

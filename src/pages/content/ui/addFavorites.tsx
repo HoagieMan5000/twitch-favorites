@@ -10,6 +10,7 @@ const favoritesClassname = 'favorites-list-container';
 
 // Function to insert a new element after a reference element
 const insertAfter = (newNode: HTMLDivElement, referenceNode: Node) => {
+  console.log("Twitch Favorites: Inserting Component");
   const root = document.createElement('div');
   root.id = 'chrome-extension-boilerplate-react-vite-content-view-root';
   
@@ -26,7 +27,7 @@ const insertAfter = (newNode: HTMLDivElement, referenceNode: Node) => {
   styleElement.innerHTML = injectedStyle;
   shadowRoot.appendChild(styleElement); 
  
-  createRoot(rootIntoShadow).render(<App param="addFavorites"/>);
+  createRoot(rootIntoShadow).render(<App />);
 }
 
 function createStreamList(streamData: any[]) {
@@ -60,17 +61,23 @@ function elementExists() {
 
 // Function to handle DOM changes
 function handleMutations(mutations: MutationRecord[]) {
+  console.log("Twitch Favorites: Handling Mutations");
   if (elementExists()) {
+    console.log("Twitch Favorites: Element already exists");
     return;
   }
 
   mutations.forEach(mutation => {
     if (mutation.addedNodes.length) {
       mutation.addedNodes.forEach(addedNode => {
+        if (addedNode instanceof HTMLElement) {
+          console.log({ addedNode: addedNode.attributes?.getNamedItem('aria-label') });
+        }
         if (
           addedNode instanceof HTMLElement &&
           addedNode.attributes?.getNamedItem('aria-label')?.value === 'Followed Channels'
         ) {
+          console.log("Twitch Favorites: Found Followed Channels");
           const streamList = createStreamList([]);
           insertAfter(streamList, addedNode);
           requestStreamData();
@@ -122,4 +129,5 @@ async function addFavorites() {
   });
 }
 
+console.log("injected Twitch Favorites");
 void addFavorites();

@@ -7,6 +7,7 @@ import { TwitchDataStateContext } from "../../state/TwitchDataStateContextProvid
 import { v4 as uuidv4 } from 'uuid';
 import ChromeStorage from "../../util/chrome/ChromeStorage";
 import { FlexRow } from "../../util/FlexBox";
+import { FavoritesProvider } from "../../state/FavoritesProvider";
 
 export interface CategoryAdderProps {
 
@@ -42,11 +43,7 @@ export const CategoryAdder = (props: CategoryAdderProps) => {
                             }
                         }
                     }
-                    new ChromeStorage().setSync({
-                        [userId]: {
-                            ...newState
-                        }
-                    });
+                    FavoritesProvider.setFavorites(userId, newState);
                     favoritesContext.setState(newState)
                 }
             }}>

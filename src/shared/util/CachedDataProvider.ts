@@ -67,4 +67,11 @@ export default class CachedDataProvider {
     const storage = new ChromeStorage();
     return (await storage.getSync([userId]))?.[userId] as FavoritesState | undefined;
   }
+
+  public static async setFavorites(userId: string, favorites?: FavoritesState) {
+    const storage = new ChromeStorage();
+    return storage.setSync({
+      [userId]: favorites,
+    });
+  }
 }

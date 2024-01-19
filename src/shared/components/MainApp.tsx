@@ -6,9 +6,10 @@ import { PopHeader } from './PopHeader';
 import { FavoritesListContainer } from './favoriteslist/FavoritesListContainer';
 import { TwitchDataStateContext } from '../state/TwitchDataStateContextProvider';
 import ChromeStorage from '../util/chrome/ChromeStorage';
-import { FavoritesState } from '../state/FavoritesState';
+import { FavoritesState, filterOutFavoritesNoCategory } from '../state/FavoritesState';
 import { FlexRow } from '../util/FlexBox';
 import { CategoryAdder } from './favoriteslist/CategoryAdder';
+import { FavoritesProvider } from '../state/FavoritesProvider';
 
 const MainApp = () => {
   const twitchContext = useContext(TwitchDataStateContext);
@@ -35,11 +36,8 @@ const MainApp = () => {
                       ...favoritesContext.state,
                       ...newValue,
                     };
-                    new ChromeStorage().setSync({
-                      [userId]: {
-                        ...newState,
-                      },
-                    });
+                    newState.favorites = filterOutFavoritesNoCategory(newState.favorites);
+                    FavoritesProvider.setFavorites(userId, newState);
                     favoritesContext.setState(newState);
                   }
                 }}

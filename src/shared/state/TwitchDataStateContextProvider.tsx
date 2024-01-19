@@ -41,7 +41,6 @@ export const TwitchDataStateContextProvider = (props: TwitchDataStateContextProv
     const [accessToken, getToken, resetToken] = useTwitchAccessToken();
     const [userData, getUser, logout, refreshUser] = useUserData(accessToken);
     
-    //const [followerList] = useFollowingList(userData);
     const [followerList] = useChromeStorageSync<UserData[]>("followingUserData", {
         type: "local",
         defaultValue: [],
