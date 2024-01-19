@@ -31,11 +31,17 @@ const manifest = {
     128: "icon128.png"
   },
   content_scripts: [
+    /*
     {
       matches: ['*://www.twitch.tv/*'],
       js: ['src/pages/contentInjected/index.js'],
       // KEY for cache invalidation
       css: ['assets/css/contentStyle<KEY>.chunk.css'],
+    },
+    */
+    {
+      matches: ['*://www.twitch.tv/*'],
+      js: ['src/pages/contentUi/index.js'],
     },
   ],
   web_accessible_resources: [

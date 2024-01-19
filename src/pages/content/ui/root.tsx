@@ -1,76 +1,31 @@
-import "./content.css";
-import { StreamData } from "../../../shared/service/TwitchClientTypes";
+import { createRoot } from 'react-dom/client';
+import App from '@pages/content/ui/app';
+import refreshOnUpdate from 'virtual:reload-on-update-in-view';
+import injectedStyle from './injected.css?inline';
 
-const streamListClassname = "favorite-stream-list";
-console.log("HAI HAI HAI");
-let added = false;
+refreshOnUpdate('pages/content');
 
-// Function to insert a new element after a reference element
-function insertAfter(newNode: HTMLDivElement, referenceNode: Node) {
-  console.log("INSERTING");
-  referenceNode.parentElement?.insertBefore(newNode, referenceNode);
-}
+const root = document.createElement('div');
+root.id = 'chrome-extension-boilerplate-react-vite-content-view-root';
 
-function createStreamList(streamData: StreamData[]) {
-  const container = document.createElement("div");
-  container.className = streamListClassname;
-  container.append(...streamData.map((stream) => {
-    const streamElement = document.createElement("div");
-    streamElement.className = `${streamListClassname}-item`;
-    streamElement.textContent = stream.user_name;
-    return streamElement;
-  }));
-  return container;
-}
+document.body.append(root);
 
-function findStreamListElement() {
-  return document.getElementsByClassName(streamListClassname)[0];
-}
+const rootIntoShadow = document.createElement('div');
+rootIntoShadow.id = 'shadow-root';
 
-// Function to handle DOM changes
-function handleMutations(mutations: MutationRecord[]) {
-  if (added) {
-    return;
-  }
-  console.log("HAI?");
+const shadowRoot = root.attachShadow({ mode: 'open' });
+shadowRoot.appendChild(rootIntoShadow);
 
-  mutations.forEach((mutation) => {
-    if (mutation.addedNodes.length) {
-      mutation.addedNodes.forEach((addedNode) => {
-        if (
-          addedNode instanceof HTMLElement &&
-          addedNode.attributes?.getNamedItem("aria-label")?.value ===
-            "Followed Channels"
-        ) {
-          const streamList = createStreamList([]);
-          insertAfter(streamList, addedNode);
-          added = true;
-        }
-      });
-    }
-  });
-}
+/** Inject styles into shadow dom */
+const styleElement = document.createElement('style');
+styleElement.innerHTML = injectedStyle;
+shadowRoot.appendChild(styleElement);
 
-// Set up the observer
-const observer = new MutationObserver(handleMutations);
+/**
+ * https://github.com/Jonghakseo/chrome-extension-boilerplate-react-vite/pull/174
+ *
+ * In the firefox environment, the adoptedStyleSheets bug may prevent contentStyle from being applied properly.
+ * Please refer to the PR link above and go back to the contentStyle.css implementation, or raise a PR if you have a better way to improve it.
+ */
 
-// Start observing
-observer.observe(document.body, { childList: true, subtree: true });
-
-chrome.runtime.onMessage.addListener(function (
-  request: {
-    type: string,
-    [key: string]: any
-  },
-  sender: chrome.runtime.MessageSender,
-  sendResponse: (response: any) => void
-) {
-  console.log({request});
-  if (request.type === "getLiveStreamsResponse") {
-    const existingElement = findStreamListElement();
-    if (existingElement) {
-      const newElement = createStreamList(request.streams);
-      existingElement.replaceWith(newElement);
-    }
-  }
-});
+createRoot(rootIntoShadow).render(<App param="root"/>);

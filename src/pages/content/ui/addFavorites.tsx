@@ -1,10 +1,32 @@
 import { GetLiveStreamsRequest, GetLiveStreamsResponse } from "@root/src/shared/messaging/GetLiveStreams";
+import { createRoot } from "react-dom/client";
+import App from '@pages/content/ui/app';
+import injectedStyle from './injected.css?inline';
+import refreshOnUpdate from "virtual:reload-on-update-in-view";
+
+refreshOnUpdate('pages/content');
 
 const favoritesClassname = 'favorites-list-container';
 
 // Function to insert a new element after a reference element
 const insertAfter = (newNode: HTMLDivElement, referenceNode: Node) => {
-  referenceNode.parentElement?.insertBefore(newNode, referenceNode);
+  const root = document.createElement('div');
+  root.id = 'chrome-extension-boilerplate-react-vite-content-view-root';
+  
+  referenceNode.parentElement?.insertBefore(root, referenceNode);
+  
+  const rootIntoShadow = document.createElement('div');
+  rootIntoShadow.id = 'shadow-root';
+  
+  const shadowRoot = root.attachShadow({ mode: 'open' });
+  shadowRoot.appendChild(rootIntoShadow);
+  
+  /** Inject styles into shadow dom */
+  const styleElement = document.createElement('style');
+  styleElement.innerHTML = injectedStyle;
+  shadowRoot.appendChild(styleElement); 
+ 
+  createRoot(rootIntoShadow).render(<App param="addFavorites"/>);
 }
 
 function createStreamList(streamData: any[]) {
