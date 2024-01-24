@@ -18,7 +18,7 @@ export const Login = (props: LoginProps) => {
     console.log({ accessToken });
 
     return <div>
-        {(!accessToken || !userData) &&
+        {(!userData) &&
             <Button
                 variant="contained"
                 color="secondary"
