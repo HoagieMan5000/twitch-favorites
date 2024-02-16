@@ -7,13 +7,15 @@ export function initStreamInfoProvider() {
     sender: chrome.runtime.MessageSender,
     sendResponse: (response: any) => void,
   ) {
+    console.log("HAI RECEIVED MESSAGE");
     console.log({ request, sender, sendResponse });
     if (request.type === 'getLiveStreams') {
-      getStreamInfo().then(streams => {
-        console.log({ streams });
+      getStreamInfo().then(streamInfo => {
+        console.log({ streamInfo });
         const response: GetLiveStreamsResponse = {
           type: 'getLiveStreamsResponse',
-          streams,
+          streams: streamInfo.streamsData,
+          userData: streamInfo.favUserData,
         };
         console.log({ response });
         sendResponse(response);
@@ -27,9 +29,13 @@ export async function getStreamInfo() {
   const user = await CachedDataProvider.getUserData();
   const allStreamData = await CachedDataProvider.getStreamData();
   const favorites = await CachedDataProvider.getFavorites(user.id);
+  const userData = await CachedDataProvider.getFollowingUserData();
   console.log({ user, allStreamData, favorites });
   const streamsData = allStreamData?.filter(streamData => {
     return favorites?.favorites?.find((fav: any) => fav.channelId === streamData.user_id);
   });
-  return streamsData;
+  const favUserData = userData?.filter((user) => {
+    return favorites?.favorites?.find((fav: any) => fav.channelId === user.id);
+  });
+  return { streamsData, favUserData};
 }

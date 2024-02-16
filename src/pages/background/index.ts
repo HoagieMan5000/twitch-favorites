@@ -2,7 +2,6 @@ import BackgroundUpdater from "./BackgroundUpdater";
 import CachedDataProvider from "../../shared/util/CachedDataProvider";
 import reloadOnUpdate from 'virtual:reload-on-update-in-background-script';
 import 'webextension-polyfill';
-import { GetLiveStreamsResponse } from "@root/src/shared/messaging/GetLiveStreams";
 import { initStreamInfoProvider } from "./StreamInfoProvider";
 
 reloadOnUpdate('pages/background');

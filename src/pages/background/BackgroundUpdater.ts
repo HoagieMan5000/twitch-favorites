@@ -69,8 +69,10 @@ export default class BackgroundUpdater {
         if (tab.id) {
           const streamMessage: GetLiveStreamsResponse = {
             type: "getLiveStreamsResponse",
-            streams: streamsData || [],
+            streams: streamsData.streamsData || [],
+            userData: streamsData.favUserData || [],
           };
+          console.log({ streamMessage });
           chrome.tabs.sendMessage(tab.id, streamMessage);
         }
       });

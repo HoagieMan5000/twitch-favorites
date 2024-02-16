@@ -1,17 +1,17 @@
 import { StreamData } from "../service/TwitchClientTypes";
-import { GetLiveStreamsRequest } from "./GetLiveStreams";
+import { GetLiveStreamsRequest, GetLiveStreamsResponse } from "./GetLiveStreams";
 
 export class MessageClient {
-    public static async requestStreams(): Promise<StreamData[]> {
+    public static async requestStreams(): Promise<GetLiveStreamsResponse | undefined> {
         const request: GetLiveStreamsRequest = { type: "getLiveStreams" };
         const response = await this.sendMessage(request);
-        if (response.type === "getLiveStreamsResponse") {
-            return response.streams;
+        console.log({ response });
+        if (response?.type === "getLiveStreamsResponse") {
+            return response;
         }
-        return [];
     }
 
-    public static async sendMessage(request: any): Promise<any> {
+    public static async sendMessage(request: GetLiveStreamsRequest): Promise<GetLiveStreamsResponse> {
         return new Promise((resolve, reject) => {
             chrome.runtime.sendMessage(request, (response: any) => {
                 resolve(response);
